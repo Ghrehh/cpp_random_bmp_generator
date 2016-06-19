@@ -1,20 +1,21 @@
 #include <iostream>
 #include <fstream>
 
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <sstream>
 using namespace std;
 
 FILE *f;
 
-int height = 500;
-int width = 500;
+int height = 1000;
+int width = 1000;
 
 int main(){
     
     unsigned char bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
     unsigned char bmpinfoheader[40] = {40,0,0,0, 
-                                        height,0,0,0, 
-                                        width,0,0,0, 
+                                        0,0,0,0, 
+                                        0,0,0,0, 
                                         1,0, 
                                         24,0,
                                         0,0,0,0,
@@ -35,7 +36,7 @@ int main(){
         if (counter < 7) {
             data[i] = rand() % 255;
         }
-        else {
+        else { 
             data[i] = 0;
             counter++;
         }
@@ -48,7 +49,16 @@ int main(){
         
     }
                             
-    bmpfileheader[2] = sizeof(bmpfileheader) + sizeof(bmpinfoheader) + sizeof(data);
+    bmpfileheader[2] = sizeof(bmpfileheader) + sizeof(bmpinfoheader) + sizeof(data); //sets size of entire file
+    
+    bmpinfoheader[ 4] = (unsigned char)(       width    );
+    bmpinfoheader[ 5] = (unsigned char)(       width>> 8);
+    bmpinfoheader[ 6] = (unsigned char)(       width>>16);
+    bmpinfoheader[ 7] = (unsigned char)(       width>>24);
+    bmpinfoheader[ 8] = (unsigned char)(       height    );
+    bmpinfoheader[ 9] = (unsigned char)(       height>> 8);
+    bmpinfoheader[10] = (unsigned char)(       height>>16);
+    bmpinfoheader[11] = (unsigned char)(       height>>24);
     
     
     f = fopen("img.bmp","wb");
